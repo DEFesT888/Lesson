@@ -10,6 +10,6 @@ namespace SQlite
             Database.EnsureCreated();
         }
         public DbSet<ModelUser> ModelUsers { get; set; } = null!;
-
+        public DbSet<Program> ProgramUsers { get; set; } = null!;
     }
 }

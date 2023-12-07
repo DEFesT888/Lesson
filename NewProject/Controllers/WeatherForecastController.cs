@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using SQlite.Models;
 
 namespace NewProject.Controllers
 {
@@ -28,6 +29,15 @@ namespace NewProject.Controllers
                 Summary = Summaries[Random.Shared.Next(Summaries.Length)]
             })
             .ToArray();
-        }
+        }/*
+        [HttpPost(Name = "PostWeatherForecasty")]
+        public async Task<ActionResult<ModelUser>> PostModelUser(ModelUser modelUser)
+        {
+            _context.ModelUser.Add(modelUser);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(GetModelUser), new { id = modelUser.Id }, modelUser);
+        }*/
+
     }
 }
