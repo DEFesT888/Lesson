@@ -11,5 +11,9 @@ namespace SQlite
         }
         public DbSet<ModelUser> ModelUsers { get; set; } = null!;
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<ModelUser>().ToTable("ModelUser");
+        }
     }
 }

@@ -1,10 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SQlite.Models
 {
     public class ModelUser
     {
-        public int Id { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public Guid Id { get; set; }
         [Required(ErrorMessage = "Введите имя пользователя")]
         public string Name { get; set; } = null!;
         [Required(ErrorMessage = "Введите почту пользователя")]
