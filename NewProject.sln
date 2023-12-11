@@ -5,7 +5,7 @@ VisualStudioVersion = 17.8.34322.80
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewProject", "NewProject\NewProject.csproj", "{D1B2C461-B18A-4240-8A57-AD003DC5AB51}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SQlite", "SQlite\SQlite.csproj", "{3BF8135B-DF6B-4DB4-9CE0-37C1A02D846F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SQlite", "SQlite\SQlite.csproj", "{3BF8135B-DF6B-4DB4-9CE0-37C1A02D846F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

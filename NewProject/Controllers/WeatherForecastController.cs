@@ -7,37 +7,72 @@ namespace NewProject.Controllers
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
-
-        private readonly ILogger<WeatherForecastController> _logger;
+        private readonly ILogger<WeatherForecastController> _logger;//
+        private readonly List<User> _users;//создает список для хранения в нём данных пользователей
 
         public WeatherForecastController(ILogger<WeatherForecastController> logger)
         {
             _logger = logger;
+            _users = new List<User>
+            {
+            };
         }
 
-        [HttpGet(Name = "GetWeatherForecast")]
-        public IEnumerable<WeatherForecast> Get()
+        [HttpGet(Name = "GetUsers")]//даёт прочитать данные пользователей которые принял Post
+        public IEnumerable<User> GetUsers()
         {
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+            return _users;
+        }
+
+        [HttpPost(Name = "CreateUser")]//присваивает Id новому пользователю и добавляет его в список пользователей
+        public IActionResult CreateUser(User newUser)
+        {
+            if (!ModelState.IsValid)
             {
-                Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                TemperatureC = Random.Shared.Next(-20, 55),
-                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-            })
-            .ToArray();
-        }/*
-        [HttpPost(Name = "PostWeatherForecasty")]
-        public async Task<ActionResult<ModelUser>> PostModelUser(ModelUser modelUser)
+                return BadRequest(ModelState);//возврат ошибки валидации
+            }
+
+            newUser.Id = Guid.NewGuid();
+            _users.Add(newUser);
+
+            return CreatedAtAction("GetUsers", _users);//пользователь создан
+        }
+
+        [HttpPut("{id}", Name = "UpdateUser")]//обновляет существующего пользователя
+        public IActionResult UpdateUser(Guid id, User updatedUser)
         {
-            _context.ModelUser.Add(modelUser);
-            await _context.SaveChangesAsync();
+            var existingUser = _users.FirstOrDefault(u => u.Id == id);
 
-            return CreatedAtAction(nameof(GetModelUser), new { id = modelUser.Id }, modelUser);
-        }*/
+            if (existingUser == null)
+            {
+                return NotFound();//возвращает если пользователь не найден
+            }
 
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);//возврат ошибки валидации
+            }
+
+            existingUser.Name = updatedUser.Name;
+            existingUser.Email = updatedUser.Email;
+            existingUser.Password = updatedUser.Password;
+
+            return NoContent();//успешное обновление пользователя
+        }
+
+        [HttpDelete("{id}", Name = "DeleteUser")]// удаляет пользователя по его Id
+        public IActionResult DeleteUser(Guid id)
+        {
+            var userToDelete = _users.FirstOrDefault(u => u.Id == id);
+
+            if (userToDelete == null)
+            {
+                return NotFound();//возвращает если пользователь не найден
+            }
+
+            _users.Remove(userToDelete);
+
+            return NoContent();//успешное удаление пользователя
+        }
     }
 }
