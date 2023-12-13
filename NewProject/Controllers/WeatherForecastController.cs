@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SQlite.Models;
 
 namespace NewProject.Controllers
@@ -8,71 +9,75 @@ namespace NewProject.Controllers
     public class WeatherForecastController : ControllerBase
     {
         private readonly ILogger<WeatherForecastController> _logger;//
-        private readonly List<User> _users;//создает список для хранения в нём данных пользователей
+        private readonly ApplicationContext _context;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        public WeatherForecastController(ILogger<WeatherForecastController> logger, ApplicationContext context)
         {
             _logger = logger;
-            _users = new List<User>
-            {
-            };
+            _context = context;
         }
 
-        [HttpGet(Name = "GetUsers")]//даёт прочитать данные пользователей которые принял Post
+        [HttpGet(Name = "GetUsers")]
         public IEnumerable<User> GetUsers()
         {
-            return _users;
+            return _context.Users.ToList();
         }
 
-        [HttpPost(Name = "CreateUser")]//присваивает Id новому пользователю и добавляет его в список пользователей
-        public IActionResult CreateUser(User newUser)
+        [HttpPost(Name = "CreateUser")]
+        public async Task<IActionResult> CreateUser(User newUser)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);//возврат ошибки валидации
+                return BadRequest(ModelState);
             }
-
-            newUser.Id = Guid.NewGuid();
-            _users.Add(newUser);
-
-            return CreatedAtAction("GetUsers", _users);//пользователь создан
+            
+            _context.Users.Add(newUser);// Добавляет нового пользователя в базу данных
+            await _context.SaveChangesAsync();
+            
+            return CreatedAtAction("GetUsers", new { id = newUser.Id }, newUser);// Возвращает 201 и данные нового пользователя
         }
 
-        [HttpPut("{id}", Name = "UpdateUser")]//обновляет существующего пользователя
+        [HttpPut("{id}", Name = "UpdateUser")]
         public IActionResult UpdateUser(Guid id, User updatedUser)
         {
-            var existingUser = _users.FirstOrDefault(u => u.Id == id);
+            var existingUser = _context.Users.FirstOrDefault(u => u.Id == id);// Находит существующего пользователя по id
 
             if (existingUser == null)
             {
-                return NotFound();//возвращает если пользователь не найден
+                return NotFound();
             }
 
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);//возврат ошибки валидации
+                return BadRequest(ModelState);
             }
 
+            // Обновляет данные существующего пользователя
             existingUser.Name = updatedUser.Name;
             existingUser.Email = updatedUser.Email;
             existingUser.Password = updatedUser.Password;
 
-            return NoContent();//успешное обновление пользователя
+            // Сохраняет изменения в базе данных
+            _context.SaveChanges();
+
+            // Возвращает 204 No Content, обозначая успешное обновление
+            return NoContent();
         }
 
-        [HttpDelete("{id}", Name = "DeleteUser")]// удаляет пользователя по его Id
+        [HttpDelete("{id}", Name = "DeleteUser")]
         public IActionResult DeleteUser(Guid id)
         {
-            var userToDelete = _users.FirstOrDefault(u => u.Id == id);
+            var userToDelete = _context.Users.FirstOrDefault(u => u.Id == id);// Находит пользователя по id
 
             if (userToDelete == null)
             {
-                return NotFound();//возвращает если пользователь не найден
+                return NotFound();
             }
 
-            _users.Remove(userToDelete);
+            _context.Users.Remove(userToDelete);// Удаляет пользователя из базы данных
+            _context.SaveChanges();
 
-            return NoContent();//успешное удаление пользователя
+            return NoContent();// Возвращает 204 No Content, обозначая успешное удаление
         }
     }
 }
