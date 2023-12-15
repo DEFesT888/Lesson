@@ -5,7 +5,7 @@ using SQlite.Models;
 namespace NewProject.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/users")]
     public class WeatherForecastController : ControllerBase
     {
         private readonly ILogger<WeatherForecastController> _logger;//
@@ -17,13 +17,13 @@ namespace NewProject.Controllers
             _context = context;
         }
 
-        [HttpGet(Name = "GetUsers")]
+        [HttpGet("{GetUser}", Name = "GetUsers")]
         public IEnumerable<User> GetUsers()
         {
             return _context.Users.ToList();
         }
 
-        [HttpPost(Name = "CreateUser")]
+        [HttpPost("{CreateUser}", Name = "CreateUser")]
         public async Task<IActionResult> CreateUser(User newUser)
         {
             if (!ModelState.IsValid)
@@ -37,7 +37,7 @@ namespace NewProject.Controllers
             return CreatedAtAction("GetUsers", new { id = newUser.Id }, newUser);// Возвращает 201 и данные нового пользователя
         }
 
-        [HttpPut("{id}", Name = "UpdateUser")]
+        [HttpPut("{UpdateUser id}", Name = "UpdateUser")]
         public IActionResult UpdateUser(Guid id, User updatedUser)
         {
             var existingUser = _context.Users.FirstOrDefault(u => u.Id == id);// Находит существующего пользователя по id
@@ -56,7 +56,7 @@ namespace NewProject.Controllers
             existingUser.Name = updatedUser.Name;
             existingUser.Email = updatedUser.Email;
             existingUser.Password = updatedUser.Password;
-
+            existingUser.Sity = updatedUser.Sity;
             // Сохраняет изменения в базе данных
             _context.SaveChanges();
 
@@ -64,7 +64,7 @@ namespace NewProject.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{id}", Name = "DeleteUser")]
+        [HttpDelete("{DeleteUser id}", Name = "DeleteUser")]
         public IActionResult DeleteUser(Guid id)
         {
             var userToDelete = _context.Users.FirstOrDefault(u => u.Id == id);// Находит пользователя по id

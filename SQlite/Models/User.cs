@@ -15,5 +15,8 @@ namespace SQlite.Models
         [MinLength(4, ErrorMessage = "Минимальная длина пароля - 4 символов")]
         [Required(ErrorMessage = "Введите пароль пользователя, это поле обязательное для заполнения")]
         public string Password { get; set; } = null!;
+
+        [Required(ErrorMessage = "Введите из какого вы города")]
+        public string Sity { get; set; } = null!;
     }
 }
