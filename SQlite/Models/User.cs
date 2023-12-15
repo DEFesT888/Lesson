@@ -18,5 +18,8 @@ namespace SQlite.Models
 
         [Required(ErrorMessage = "Введите из какого вы города")]
         public string Sity { get; set; } = null!;
+
+        [Required(ErrorMessage = "Введите возраст")]
+        public int Age { get; set; }
     }
 }

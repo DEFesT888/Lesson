@@ -5,7 +5,7 @@ using SQlite.Models;
 namespace NewProject.Controllers
 {
     [ApiController]
-    [Route("api/users")]
+    [Route("api/Users")]
     public class WeatherForecastController : ControllerBase
     {
         private readonly ILogger<WeatherForecastController> _logger;//
@@ -17,13 +17,13 @@ namespace NewProject.Controllers
             _context = context;
         }
 
-        [HttpGet("{GetUser}", Name = "GetUsers")]
+        [HttpGet(Name = "GetUsers")]
         public IEnumerable<User> GetUsers()
         {
             return _context.Users.ToList();
         }
 
-        [HttpPost("{CreateUser}", Name = "CreateUser")]
+        [HttpPost("CreateUsers", Name = "CreateUser")]
         public async Task<IActionResult> CreateUser(User newUser)
         {
             if (!ModelState.IsValid)
@@ -37,7 +37,7 @@ namespace NewProject.Controllers
             return CreatedAtAction("GetUsers", new { id = newUser.Id }, newUser);// Возвращает 201 и данные нового пользователя
         }
 
-        [HttpPut("{UpdateUser id}", Name = "UpdateUser")]
+        [HttpPut("UpdateUser/{id}", Name = "UpdateUser")]
         public IActionResult UpdateUser(Guid id, User updatedUser)
         {
             var existingUser = _context.Users.FirstOrDefault(u => u.Id == id);// Находит существующего пользователя по id
@@ -57,6 +57,7 @@ namespace NewProject.Controllers
             existingUser.Email = updatedUser.Email;
             existingUser.Password = updatedUser.Password;
             existingUser.Sity = updatedUser.Sity;
+            existingUser.Age = updatedUser.Age;
             // Сохраняет изменения в базе данных
             _context.SaveChanges();
 
@@ -64,7 +65,7 @@ namespace NewProject.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{DeleteUser id}", Name = "DeleteUser")]
+        [HttpDelete("DeleteUser/{id}", Name = "DeleteUser")]
         public IActionResult DeleteUser(Guid id)
         {
             var userToDelete = _context.Users.FirstOrDefault(u => u.Id == id);// Находит пользователя по id
