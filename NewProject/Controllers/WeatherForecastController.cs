@@ -21,6 +21,7 @@ namespace NewProject.Controllers
         public IEnumerable<User> GetUsers()
         {
             return _context.Users.ToList();
+            //return _context.Users.Include(u => u.Purchases).ToList();
         }
 
         [HttpPost("CreateUsers", Name = "CreateUser")]

@@ -12,10 +12,17 @@ namespace NewProject
                    //Database.EnsureCreated();
                }
         public DbSet<User> Users { get; set; } = null!;
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        public DbSet<Purchase> Purchases { get; set; } = null!;
+
+        //protected override void OnModelCreating(ModelBuilder modelBuilder)
         //{
-        //    optionsBuilder.UseSqlite("Data Source=DBuser.db");
+        //    modelBuilder.Entity<User>()
+        //        .HasMany(w => w.Purchases)
+        //        .WithOne(p => p.User)
+        //        .HasForeingKey(p => p.UserId)
+        //        .OnDelete(DeleteBehavior.Cascade);
         //}
+
 
     }
 }

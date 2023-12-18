@@ -21,5 +21,7 @@ namespace SQlite.Models
 
         [Required(ErrorMessage = "Введите возраст")]
         public int Age { get; set; }
+
+       // public List<Purchase> Purchases { get; set; } = new List<Purchase>();
     }
 }
